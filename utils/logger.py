@@ -1,13 +1,13 @@
+import os
 from datetime import datetime
 
-
-LOG_FILE = "outputs/activity.log"
+LOG_DIR = "outputs"
+LOG_FILE = os.path.join(LOG_DIR, "activity.log")
 
 
 def write_log(action):
-    now = datetime.now()
+    os.makedirs(LOG_DIR, exist_ok=True)
 
     with open(LOG_FILE, "a") as file:
-        file.write(
-            f"{now.strftime('%Y-%m-%d %H:%M:%S')} | {action}\n"
-        )
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        file.write(f"{now} | {action}\n")
