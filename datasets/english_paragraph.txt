@@ -1,0 +1,2 @@
+Cryptanalysis combines careful observation, mathematical reasoning, and patience.
+Patterns in language can reveal useful clues about an encrypted message.
