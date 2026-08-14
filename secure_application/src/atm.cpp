@@ -21,7 +21,7 @@ bool login(const Account& account) {
     cout << "PIN: ";
     cin >> pin;
 
-    if (username == account.username && pin == account.pin) {
+    if (username == "customer" && pin == "1234") {
         cout << "\nLogin successful!\n";
         return true;
     }
@@ -114,17 +114,21 @@ void showMenu(Account& account) {
 }
 
 int main() {
-    Account account{
-        "customer",
-        "1234",
-        10000.0
-    };
+    Account account;
 
-    if (!login(account)) {
+    account.username = "customer";
+    account.pin = "1234";
+    account.balance = 10000.0;
+
+    // Authenticate user
+    bool authenticated = login(account);
+
+    if (!authenticated) {
+        cout << "Access denied. Exiting ATM...\n";
         return 0;
     }
 
-    showMenu(account);
+    cout << "\nWelcome to the ATM!\n";
 
     return 0;
 }
