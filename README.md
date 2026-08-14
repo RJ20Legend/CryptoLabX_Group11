@@ -10,12 +10,9 @@ decryption, or attack algorithms yet.
 
 | Name | Student ID | Contribution |
 | --- | --- | --- |
-| _Add member name_ | _Add ID_ | Project coordination |
-| _Add member name_ | _Add ID_ | CLI and logging |
-| _Add member name_ | _Add ID_ | File analysis and datasets |
+| Rakshit Kumar Jain | 2024UCP1335 | Project coordination CLI and logging |
+| Krishna Yadav | 2024UCP1417 | File analysis and datasets |
 
-Replace the placeholder details before submission.  Each member should use a
-separate Git branch and make meaningful, clearly described commits.
 
 ## Project structure
 

@@ -1,5 +1,7 @@
 from utils.logger import write_log
-
+from analysis.file_analyzer import format_analysis
+from utils.logger import write_log
+from pathlib import Path
 
 def encrypt():
     write_log("Encrypt")
@@ -18,10 +20,32 @@ def attack():
 
 def analyze():
     write_log("Analyze")
-    print("\nAnalysis module coming soon.\n")
-    # Later:
-    # from analysis.file_analysis import analyze_file
-    # analyze_file()
+
+    datasets = Path("datasets")
+
+    files = list(datasets.glob("*.txt"))
+
+    if not files:
+        print("\nNo text files found in datasets folder.\n")
+        return
+
+    print("\nAvailable files:")
+    for i, file in enumerate(files, start=1):
+        print(f"{i}. {file.name}")
+
+    try:
+        choice = int(input("\nSelect a file: "))
+
+        if choice < 1 or choice > len(files):
+            print("\nInvalid selection.\n")
+            return
+
+        print()
+        print(format_analysis(files[choice - 1]))
+        print()
+
+    except ValueError:
+        print("\nPlease enter a valid number.\n")
 
 
 def exit_program():
