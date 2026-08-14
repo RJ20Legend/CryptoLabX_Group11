@@ -128,7 +128,7 @@ int main() {
         return 0;
     }
 
-    cout << "\nWelcome to the ATM!\n";
+    showMenu(account);
 
     return 0;
 }
