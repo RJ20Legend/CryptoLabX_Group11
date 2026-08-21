@@ -120,7 +120,6 @@ int main() {
     account.pin = "1234";
     account.balance = 10000.0;
 
-    // Authenticate user
     bool authenticated = login(account);
 
     if (!authenticated) {
