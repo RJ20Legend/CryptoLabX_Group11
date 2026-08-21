@@ -120,7 +120,6 @@ int main() {
     account.pin = "1234";
     account.balance = 10000.0;
 
-    // Authenticate user
     bool authenticated = login(account);
 
     if (!authenticated) {
@@ -128,7 +127,7 @@ int main() {
         return 0;
     }
 
-    cout << "\nWelcome to the ATM!\n";
+    showMenu(account);
 
     return 0;
 }
