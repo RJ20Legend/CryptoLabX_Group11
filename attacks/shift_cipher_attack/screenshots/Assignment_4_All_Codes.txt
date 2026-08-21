@@ -1,0 +1,456 @@
+ASSIGNMENT 4
+SHIFT CIPHER CRYPTANALYSIS
+
+Topic:
+Cryptanalysis of Shift Cipher using Brute Force, Dictionary Scoring
+and Chi-Square Analysis
+
+============================================================
+1. shift_cipher.py
+============================================================
+
+Purpose:
+Implements Shift Cipher encryption and decryption.
+
+Code:
+
+def shift_cipher(text, key, mode):
+    result = ""
+
+    for char in text:
+        if char.isalpha():
+            base = ord('A') if char.isupper() else ord('a')
+
+            if mode == 'E':
+                shifted = (ord(char) - base + key) % 26
+            else:
+                shifted = (ord(char) - base - key) % 26
+
+            result += chr(base + shifted)
+        else:
+            result += char
+
+    return result
+
+
+print("===================================")
+print("       SHIFT CIPHER")
+print("===================================")
+
+choice = input("Enter E for Encryption or D for Decryption: ").upper()
+text = input("Enter text: ")
+key = int(input("Enter key (0-25): "))
+
+if choice == 'E':
+    encrypted = shift_cipher(text, key, 'E')
+    print("Encrypted Text:", encrypted)
+
+elif choice == 'D':
+    decrypted = shift_cipher(text, key, 'D')
+    print("Decrypted Text:", decrypted)
+
+else:
+    print("Invalid choice!")
+
+
+============================================================
+2. brute_force_dictionary.py
+============================================================
+
+Purpose:
+Performs brute-force cryptanalysis of the Shift Cipher and uses
+dictionary scoring to select the most likely plaintext.
+
+Code:
+
+import string
+
+def decrypt(text, key):
+    result = ""
+
+    for char in text:
+        if char.isalpha():
+            base = ord('A') if char.isupper() else ord('a')
+            result += chr((ord(char) - base - key) % 26 + base)
+        else:
+            result += char
+
+    return result
+
+
+def load_dictionary(filename):
+    try:
+        with open(filename, "r") as file:
+            return set(word.strip().upper() for word in file
+                       if word.strip())
+    except FileNotFoundError:
+        print("Dictionary file not found.")
+        return set()
+
+
+def dictionary_score(text, dictionary):
+    words = text.upper().split()
+    score = 0
+
+    for word in words:
+        if word in dictionary:
+            score += 1
+
+    return score
+
+
+print("========================================")
+print("      SHIFT CIPHER DICTIONARY ATTACK")
+print("========================================")
+
+ciphertext = input("Enter ciphertext: ")
+
+dictionary_path = "attacks/shift_cipher_attack/dictionary/english_words.txt"
+dictionary = load_dictionary(dictionary_path)
+
+print("\n========================================")
+print("   BRUTE FORCE + DICTIONARY ATTACK")
+print("========================================")
+
+print("Ciphertext:", ciphertext)
+print("Trying all possible keys...\n")
+
+best_key = 0
+best_score = -1
+best_plaintext = ""
+
+for key in range(26):
+    plaintext = decrypt(ciphertext, key)
+    score = dictionary_score(plaintext, dictionary)
+
+    print(f"Key {key:2d} -> Score: {score:2d} -> {plaintext}")
+
+    if score > best_score:
+        best_score = score
+        best_key = key
+        best_plaintext = plaintext
+
+print("\n========================================")
+print("              RESULT")
+print("========================================")
+
+print("Predicted Key      :", best_key)
+print("Dictionary Score   :", best_score)
+print("Decrypted Text     :", best_plaintext)
+
+
+============================================================
+3. chi_square_attack.py
+============================================================
+
+Purpose:
+Performs Shift Cipher cryptanalysis using English letter-frequency
+analysis and the Chi-Square statistical test.
+
+Code:
+
+import string
+
+ENGLISH_FREQ = {
+    'A': 8.167, 'B': 1.492, 'C': 2.782, 'D': 4.253,
+    'E': 12.702, 'F': 2.228, 'G': 2.015, 'H': 6.094,
+    'I': 6.966, 'J': 0.153, 'K': 0.772, 'L': 4.025,
+    'M': 2.406, 'N': 6.749, 'O': 7.507, 'P': 1.929,
+    'Q': 0.095, 'R': 5.987, 'S': 6.327, 'T': 9.056,
+    'U': 2.758, 'V': 0.978, 'W': 2.360, 'X': 0.150,
+    'Y': 1.974, 'Z': 0.074
+}
+
+
+def decrypt(text, key):
+    result = ""
+
+    for char in text:
+        if char.isalpha():
+            base = ord('A') if char.isupper() else ord('a')
+            result += chr((ord(char) - base - key) % 26 + base)
+        else:
+            result += char
+
+    return result
+
+
+def chi_square(text):
+    letters = [c.upper() for c in text if c.isalpha()]
+    total = len(letters)
+
+    if total == 0:
+        return float('inf')
+
+    counts = {letter: 0 for letter in string.ascii_uppercase}
+
+    for letter in letters:
+        counts[letter] += 1
+
+    score = 0.0
+
+    for letter in string.ascii_uppercase:
+        expected = ENGLISH_FREQ[letter] * total / 100
+        observed = counts[letter]
+
+        if expected > 0:
+            score += ((observed - expected) ** 2) / expected
+
+    return score
+
+
+print("========================================")
+print("       SHIFT CIPHER CHI-SQUARE ATTACK")
+print("========================================")
+
+ciphertext = input("Enter ciphertext: ")
+
+print("\n========================================")
+print("       CHI-SQUARE CRYPTANALYSIS")
+print("========================================")
+
+print("Ciphertext:", ciphertext)
+print("Trying all possible keys...\n")
+
+best_key = 0
+best_score = float('inf')
+best_plaintext = ""
+
+for key in range(26):
+    plaintext = decrypt(ciphertext, key)
+    score = chi_square(plaintext)
+
+    print(f"Key {key:2d} -> Chi-Square: {score:9.4f} -> {plaintext}")
+
+    if score < best_score:
+        best_score = score
+        best_key = key
+        best_plaintext = plaintext
+
+print("\n========================================")
+print("                RESULT")
+print("========================================")
+
+print("Predicted Key     :", best_key)
+print("Chi-Square Score  :", f"{best_score:.4f}")
+print("Decrypted Text    :", best_plaintext)
+
+
+============================================================
+4. english_words.txt
+============================================================
+
+Purpose:
+Contains English words used by the dictionary-scoring attack.
+
+Example contents:
+
+THE
+THIS
+IS
+A
+SECRET
+MESSAGE
+COMPUTER
+SCIENCE
+INTERESTING
+CRYPTOGRAPHY
+IMPORTANT
+STUDENT
+WORKING
+ON
+PROJECT
+HELLO
+WORLD
+
+
+============================================================
+5. TEST CASES USED
+============================================================
+
+Test Case 1:
+Plaintext: HELLO WORLD
+Actual Key: 3
+Ciphertext: KHOOR ZRUOG
+
+Test Case 2:
+Plaintext: THIS IS A SECRET MESSAGE
+Actual Key: 5
+Ciphertext: YMNX NX F XJHWJY RJXXFLJ
+
+Test Case 3:
+Plaintext: COMPUTER SCIENCE IS INTERESTING
+Actual Key: 7
+Ciphertext: JVTWBALY ZJPLUJL PZ PUALYLZAPUN
+
+Test Case 4:
+Plaintext: CRYPTOGRAPHY IS IMPORTANT
+Actual Key: 10
+Ciphertext: MBIZDYQBKZRI SC SWZYBDKXD
+
+Test Case 5:
+Plaintext: THE STUDENT IS WORKING ON A PROJECT
+Actual Key: 13
+Ciphertext: GUR FGHQRAG VF JBEXVAT BA N CEBWRPG
+
+
+============================================================
+6. FINAL EXPERIMENTAL RESULTS
+============================================================
+
+Test Case 1
+Actual Key: 3
+Dictionary Key: 3
+Chi-Square Key: 6
+Dictionary Correct: Yes
+Chi-Square Correct: No
+
+Test Case 2
+Actual Key: 5
+Dictionary Key: 5
+Chi-Square Key: 5
+Dictionary Correct: Yes
+Chi-Square Correct: Yes
+
+Test Case 3
+Actual Key: 7
+Dictionary Key: 7
+Chi-Square Key: 7
+Dictionary Correct: Yes
+Chi-Square Correct: Yes
+
+Test Case 4
+Actual Key: 10
+Dictionary Key: 10
+Chi-Square Key: 10
+Dictionary Correct: Yes
+Chi-Square Correct: Yes
+
+Test Case 5
+Actual Key: 13
+Dictionary Key: 13
+Chi-Square Key: 13
+Dictionary Correct: Yes
+Chi-Square Correct: Yes
+
+
+============================================================
+7. COMMANDS USED TO EXECUTE THE ASSIGNMENT
+============================================================
+
+Create directories:
+
+mkdir -p attacks/shift_cipher_attack/src
+mkdir -p attacks/shift_cipher_attack/dictionary
+mkdir -p attacks/shift_cipher_attack/testcases
+mkdir -p attacks/shift_cipher_attack/outputs
+mkdir -p attacks/shift_cipher_attack/screenshots
+mkdir -p attacks/shift_cipher_attack/reports
+
+Check structure:
+
+find attacks/shift_cipher_attack -type f -o -type d
+
+Run Shift Cipher:
+
+python3 attacks/shift_cipher_attack/src/shift_cipher.py
+
+Run Dictionary Attack:
+
+python3 attacks/shift_cipher_attack/src/brute_force_dictionary.py
+
+Run Chi-Square Attack:
+
+python3 attacks/shift_cipher_attack/src/chi_square_attack.py
+
+Check Python syntax:
+
+python3 -m py_compile attacks/shift_cipher_attack/src/shift_cipher.py
+python3 -m py_compile attacks/shift_cipher_attack/src/brute_force_dictionary.py
+python3 -m py_compile attacks/shift_cipher_attack/src/chi_square_attack.py
+
+View results:
+
+cat attacks/shift_cipher_attack/outputs/results.txt
+
+
+============================================================
+8. GIT COMMANDS USED
+============================================================
+
+Check branch:
+
+git branch
+
+Switch to assignment branch:
+
+git checkout Krishna-Yadav
+
+Check status:
+
+git status
+
+Add files:
+
+git add attacks/shift_cipher_attack/
+
+Commit Shift Cipher:
+
+git commit -m "Implemented Shift Cipher"
+
+Commit Dictionary Attack:
+
+git commit -m "Added brute-force and dictionary scoring"
+
+Commit Chi-Square Attack:
+
+git commit -m "Added Chi-Square cryptanalysis"
+
+Commit results/screenshots:
+
+git add attacks/shift_cipher_attack/results.txt
+git add attacks/shift_cipher_attack/screenshots/
+git commit -m "Added assignment 4 results and screenshots"
+
+Push branch:
+
+git push origin Krishna-Yadav
+
+
+============================================================
+9. OBSERVATION
+============================================================
+
+Dictionary scoring correctly predicted the key in all 5 test cases.
+
+Dictionary Accuracy = 5/5 = 100%
+
+Chi-Square analysis correctly predicted the key in 4 out of 5
+test cases.
+
+Chi-Square Accuracy = 4/5 = 80%
+
+Chi-Square failed in Test Case 1 because the ciphertext was very
+short. With a small number of letters, the observed frequency
+distribution may not represent normal English letter frequencies
+accurately.
+
+For longer ciphertexts, Chi-Square analysis performed correctly
+in the tested cases.
+
+
+============================================================
+10. CONCLUSION
+============================================================
+
+The Shift Cipher was successfully implemented and tested for both
+encryption and decryption. Cryptanalysis was performed using
+brute-force dictionary scoring and Chi-Square frequency analysis.
+
+The experiments showed that dictionary scoring was highly effective
+for the selected test cases, while Chi-Square analysis was also
+effective for longer ciphertexts but can fail on very short texts.
+
+The assignment demonstrates that a simple Shift Cipher can be
+cryptanalyzed without knowing the secret key by systematically
+testing possible keys and using properties of the English language.
