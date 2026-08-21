@@ -1,0 +1,19 @@
+Test Case 1
+Plaintext: HELLO WORLD
+Key: 3
+
+Test Case 2
+Plaintext: THIS IS A SECRET MESSAGE
+Key: 5
+
+Test Case 3
+Plaintext: COMPUTER SCIENCE IS INTERESTING
+Key: 7
+
+Test Case 4
+Plaintext: CRYPTOGRAPHY IS IMPORTANT
+Key: 10
+
+Test Case 5
+Plaintext: THE STUDENT IS WORKING ON A PROJECT
+Key: 13
