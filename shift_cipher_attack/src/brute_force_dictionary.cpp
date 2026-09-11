@@ -1,10 +1,7 @@
 #include "brute_force_dictionary.h"
 #include "shift_cipher.h"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cctype>
+#include <bits/stdc++.h>
 
 using namespace std;
 
