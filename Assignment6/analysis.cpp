@@ -1,5 +1,5 @@
 #include "analysis.h"
-#include <cctype>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -166,3 +166,94 @@ vector<int> kasiski_analysis(
     return candidates;
 }
 
+vector<string> split_into_groups(
+    const string& ciphertext,
+    int keyLength)
+{
+    vector<string> groups(keyLength);
+
+    for (int i = 0; i < ciphertext.length(); i++)
+    {
+        groups[i % keyLength] += ciphertext[i];
+    }
+
+    return groups;
+}
+
+vector<vector<int>> frequency_analysis(
+    const vector<string>& groups)
+{
+    vector<vector<int>> frequencies;
+
+    for (string group : groups)
+    {
+        vector<int> count(26, 0);
+
+        for (char ch : group)
+        {
+            count[ch - 'A']++;
+        }
+
+        frequencies.push_back(count);
+    }
+
+    return frequencies;
+}
+
+int find_shift(const vector<int>& frequency)
+{
+    double englishFrequency[26] =
+    {
+        8.17, 1.49, 2.78, 4.25, 12.70, 2.23,
+        2.02, 6.09, 6.97, 0.15, 0.77, 4.03,
+        2.41, 6.75, 7.51, 1.93, 0.10, 5.99,
+        6.33, 9.06, 2.76, 0.98, 2.36, 0.15,
+        1.97, 0.07
+    };
+
+    int total = 0;
+
+    for (int count : frequency)
+    {
+        total += count;
+    }
+
+    if (total == 0)
+    {
+        return 0;
+    }
+
+    double bestScore = 1e18;
+    int bestShift = 0;
+
+    for (int shift = 0; shift < 26; shift++)
+    {
+        double chiSquare = 0;
+
+        for (int i = 0; i < 26; i++)
+        {
+            int decryptedIndex = (i - shift + 26) % 26;
+
+            double expected =
+                total * englishFrequency[decryptedIndex] / 100.0;
+
+            double observed = frequency[i];
+
+            if (expected > 0)
+            {
+                chiSquare +=
+                    (observed - expected) *
+                    (observed - expected) /
+                    expected;
+            }
+        }
+
+        if (chiSquare < bestScore)
+        {
+            bestScore = chiSquare;
+            bestShift = shift;
+        }
+    }
+
+    return bestShift;
+}

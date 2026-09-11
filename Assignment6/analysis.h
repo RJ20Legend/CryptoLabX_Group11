@@ -1,7 +1,8 @@
 #ifndef ANALYSIS_H
 #define ANALYSIS_H
 
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -19,4 +20,10 @@ vector<pair<int, vector<int>>> find_factors(
 vector<int> kasiski_analysis(
     const vector<pair<int, vector<int>>>& factors);
 
+vector<string> split_into_groups(
+    const string& ciphertext,
+    int keyLength);
+vector<vector<int>> frequency_analysis(
+    const vector<string>& groups);
+int find_shift(const vector<int>& frequency);
 #endif
