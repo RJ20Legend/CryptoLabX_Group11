@@ -272,3 +272,30 @@ string find_key(const vector<vector<int>>& frequencies)
     return key;
 }
 
+double calculate_ic(const string& text)
+{
+    int n = text.length();
+
+    if (n <= 1)
+    {
+        return 0.0;
+    }
+
+    int frequency[26] = {0};
+
+    for (char ch : text)
+    {
+        frequency[ch - 'A']++;
+    }
+
+    int numerator = 0;
+
+    for (int i = 0; i < 26; i++)
+    {
+        numerator +=
+            frequency[i] * (frequency[i] - 1);
+    }
+
+    return (double)numerator /
+           (n * (n - 1));
+}

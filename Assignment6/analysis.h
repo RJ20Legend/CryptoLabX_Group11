@@ -28,5 +28,5 @@ vector<vector<int>> frequency_analysis(
 int find_shift(const vector<int>& frequency);
 
 string find_key(const vector<vector<int>>& frequencies);
-
+double calculate_ic(const string& text);
 #endif

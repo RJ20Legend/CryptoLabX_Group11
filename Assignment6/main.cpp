@@ -103,7 +103,29 @@ int main()
         cout << "Could not determine key length." << endl;
         return 1;
     }
+    cout << "\n--- Index of Coincidence Analysis (Bonus) ---\n";
 
+for (int length = 1; length <= 15; length++)
+{
+    vector<string> groups =
+        split_into_groups(cleaned, length);
+
+    double totalIC = 0.0;
+
+    for (const string& group : groups)
+    {
+        totalIC += calculate_ic(group);
+    }
+
+    double averageIC =
+        totalIC / groups.size();
+
+    cout << "Key Length "
+         << length
+         << " -> Average IC = "
+         << averageIC
+         << endl;
+}
     // Use the most probable Kasiski candidate
     int keyLength = keyLengthCandidates[0];
 
