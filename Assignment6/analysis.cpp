@@ -257,3 +257,18 @@ int find_shift(const vector<int>& frequency)
 
     return bestShift;
 }
+
+string find_key(const vector<vector<int>>& frequencies)
+{
+    string key;
+
+    for (const vector<int>& frequency : frequencies)
+    {
+        int shift = find_shift(frequency);
+
+        key += char('A' + shift);
+    }
+
+    return key;
+}
+

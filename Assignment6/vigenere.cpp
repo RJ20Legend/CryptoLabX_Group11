@@ -1,26 +1,57 @@
 #include "vigenere.h"
-#include <cctype>
 
 using namespace std;
 
-string vigenere_encrypt(const string& plaintext, const string& key)
+string vigenere_decrypt(const string& ciphertext, const string& key)
 {
-    string ciphertext;
+    string plaintext;
     int keyIndex = 0;
 
-    for (char ch : plaintext)
+    for (char ch : ciphertext)
     {
-        if (isalpha(ch))
-        {
-            char p = toupper(ch);
-            char k = toupper(key[keyIndex % key.length()]);
+        int cipherValue = ch - 'A';
 
-            char encrypted = 'A' + (p - 'A' + k - 'A') % 26;
+        int keyValue = key[keyIndex % key.length()] - 'A';
 
-            ciphertext += encrypted;
-            keyIndex++;
-        }
+        int plainValue = (cipherValue - keyValue + 26) % 26;
+
+        plaintext += char('A' + plainValue);
+
+        keyIndex++;
+    }
+
+    return plaintext;
+}
+
+string vigenere_encrypt(
+    const string& plaintext,
+    const string& key)
+{
+    string ciphertext;
+
+    for (int i = 0; i < plaintext.length(); i++)
+    {
+        int plainValue = plaintext[i] - 'A';
+
+        int keyValue =
+            key[i % key.length()] - 'A';
+
+        int cipherValue =
+            (plainValue + keyValue) % 26;
+
+        ciphertext += char('A' + cipherValue);
     }
 
     return ciphertext;
+}
+
+bool verify(
+    const string& originalCiphertext,
+    const string& plaintext,
+    const string& key)
+{
+    string regeneratedCiphertext =
+        vigenere_encrypt(plaintext, key);
+
+    return regeneratedCiphertext == originalCiphertext;
 }

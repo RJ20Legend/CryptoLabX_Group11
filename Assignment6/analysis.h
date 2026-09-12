@@ -26,4 +26,7 @@ vector<string> split_into_groups(
 vector<vector<int>> frequency_analysis(
     const vector<string>& groups);
 int find_shift(const vector<int>& frequency);
+
+string find_key(const vector<vector<int>>& frequencies);
+
 #endif
