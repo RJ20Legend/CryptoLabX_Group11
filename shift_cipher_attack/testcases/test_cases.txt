@@ -1,0 +1,31 @@
+Test Case: TC01
+Plaintext: the quick brown fox jumps over the lazy dog
+Key: 3
+Ciphertext: wkh txlfn eurzq ira mxpsv ryhu wkh odcb grj
+Purpose: Basic test with common English words
+
+Test Case: TC02
+Plaintext: cryptography protects information using mathematical techniques and secret keys
+Key: 7
+Ciphertext: jyfwavnyhwof wyvAljAZP pUMVYTHAPVU BZPUN THAOLTHAPJHS ALJOUPXBLZ HUK ZLJYLA RLFZ
+Purpose: Test dictionary scoring and frequency analysis on longer text
+
+Test Case: TC03
+Plaintext: security depends on confidentiality integrity authentication and availability
+Key: 11
+Purpose: Test with technical English vocabulary
+
+Test Case: TC04
+Plaintext: a secure communication system protects messages from unauthorized access and modification
+Key: 15
+Purpose: Test attacks on a relatively long ciphertext
+
+Test Case: TC05
+Plaintext: meet me
+Key: 8
+Purpose: Demonstrate weakness of frequency analysis on short ciphertext
+
+Test Case: TC06
+Plaintext: this is a test message and this is another test message
+Key: 19
+Purpose: Compare dictionary scoring with Chi-Square on repeated English patterns
