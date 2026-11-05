@@ -1,0 +1,8 @@
+Linux /dev/urandom:
+Uses the Linux kernel's cryptographic random number generator (CSPRNG).
+
+OpenSSL RAND:
+Uses a DRBG seeded with entropy from the operating system.
+
+.NET RandomNumberGenerator:
+Uses the operating system's cryptographic random number facilities.
