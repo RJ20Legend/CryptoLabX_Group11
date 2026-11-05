@@ -1,6 +1,7 @@
 
 import random
 import string
+import time
 
 
 # ==========================================
@@ -91,5 +92,74 @@ def part_a():
               verification == plaintext)
 
 
+# ==========================================
+# PART B: PREDICTABLE RESET TOKEN
+# ==========================================
+
+def generate_reset_token(timestamp):
+
+    rng = random.Random(timestamp)
+
+    token = bytes(
+        rng.getrandbits(8) for _ in range(16)
+    )
+
+    return token
+
+
+def part_b():
+
+    print("\n========== PART B ==========")
+
+    # Generate token using current Unix timestamp
+    timestamp = int(time.time())
+
+    token = generate_reset_token(timestamp)
+
+    print("\nOriginal Timestamp:", timestamp)
+    print("Generated Token:", token.hex())
+
+    # Attacker searches within +/- 300 seconds
+    start_time = timestamp - 300
+    end_time = timestamp + 300
+
+    recovered_timestamp = None
+    candidates_tested = 0
+
+    print("\n--- Timestamp Prediction Attack ---")
+    print("Search Interval:", start_time, "to", end_time)
+
+    for candidate in range(start_time, end_time + 1):
+
+        candidates_tested += 1
+
+        candidate_token = generate_reset_token(candidate)
+
+        if candidate_token == token:
+            recovered_timestamp = candidate
+            break
+
+    print("Candidates Tested:", candidates_tested)
+    print("Recovered Timestamp:", recovered_timestamp)
+
+    # Verify recovered timestamp
+    if recovered_timestamp is not None:
+
+        verification_token = generate_reset_token(
+            recovered_timestamp
+        )
+
+        print("Regenerated Token:", verification_token.hex())
+
+        print("Token Verification:",
+              verification_token == token)
+
+
+# ==========================================
+# MAIN
+# ==========================================
+
 if __name__ == "__main__":
+
     part_a()
+    part_b()
