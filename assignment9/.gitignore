@@ -1,0 +1,11 @@
+# Python environment
+venv/
+__pycache__/
+*.pyc
+
+# Generated binary datasets
+generated_data/*.bin
+
+# .NET build files
+dotnet_rng/bin/
+dotnet_rng/obj/
