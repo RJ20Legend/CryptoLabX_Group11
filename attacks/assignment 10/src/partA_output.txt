@@ -1,0 +1,17 @@
+===== MT19937 STREAM CIPHER =====
+
+Encryption/Decryption Test
+Original : Hello Cryptography
+Ciphertext: 22de6ebdbced0fa8279e452af71d482f77a6
+Decrypted: Hello Cryptography
+
+===== SEED RECOVERY ATTACK =====
+Original plaintext: i<pxRruywg=v+]>jAAAAAAAAAAAAAA
+Original seed: 49083
+Ciphertext (hex): 52ef3a39476b32bbc8973caaf2fc3ed3317c85301dacb2774de48a425c9b
+
+Recovered seed: 49083
+Recovered plaintext: i<pxRruywg=v+]>jAAAAAAAAAAAAAA
+Full plaintext verification: True
+Known sequence found: True
+Total matching seeds: 1

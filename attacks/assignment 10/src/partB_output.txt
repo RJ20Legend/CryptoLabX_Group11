@@ -1,0 +1,12 @@
+===== PREDICTABLE RESET TOKEN ATTACK =====
+
+Token Generation
+Timestamp: 1793959810
+Token (hex): 230d34acbc9f1355917dccdb9735f62b
+
+===== TOKEN PREDICTION ATTACK =====
+Search interval: 1793959510 to 1793960110
+Timestamps tested: 301
+Recovered timestamp: 1793959810
+Regenerated token: 230d34acbc9f1355917dccdb9735f62b
+Token verification: True
